@@ -1,0 +1,89 @@
+1. Insert a new record of leave type
+CREATE OR REPLACE PROCEDURE leave_insert
+	(
+		current_lv_code IN VARCHAR2,
+		current_lv_name IN VARCHAR2	
+	)
+IS
+BEGIN
+	INSERT INTO leave_type
+	VALUES (current_lv_code, current_lv_name);
+	COMMIT;
+END;
+
+EXCEC leave_insert('LVB55513','Adoption Leave') ; 
+2.Update the name and department of supervisor  
+
+CREATE OR REPLACE PROCEDURE update_supervisor 
+	(
+		current_sv_no IN VARCHAR2,
+		current_dept_no IN VARCHAR2,
+		current_sv_name IN VARCHAR2
+	)
+IS
+BEGIN
+	UPDATE supervisor 
+	SET sv_id =current_sv_no,dept_no = current_dept_no,
+	sv_name = current_sv_name 
+	WHERE sv_id = current_sv_no ;
+	COMMIT;
+END;
+/
+
+EXECUTE update_supervisor('SVA00001' , 'DEF34671','DORARMON'); 
+
+3.Update the record in forward_leave
+CREATE OR REPLACE PROCEDURE update_forward_leave
+	(
+		current_lv_next IN VARCHAR2,
+		current_emp_id IN VARCHAR2,
+		current_annual_num IN NUMBER	
+	) 
+IS
+BEGIN
+	UPDATE forward_leave
+	SET annual_num_next=current_annual_num, emp_id = current_emp_id 
+	WHERE lv_next = current_lv_next;
+	COMMIT;
+END; 
+/
+
+EXECUTE update_forward_leave('LNA00001','EMA00001', 5);
+
+4.Insert record to supervisor table
+CREATE OR REPLACE PROCEDURE supervisor_insert
+	(
+		current_sv_id IN VARCHAR2,
+		current_dept_no IN VARCHAR2,
+		current_sv_name IN VARCHAR2	
+	)
+IS
+BEGIN
+	INSERT INTO supervisor
+	VALUES (current_sv_id, current_dept_no ,current_sv_name);
+	COMMIT;
+END;
+/
+
+EXECUTE supervisor_insert('SVB55532','DEA00001','Jib bi'); 
+
+5. Update the salary amount , payment method and  salary_status of employee
+
+CREATE OR REPLACE PROCEDURE update_employee_salary
+	(
+		current_emp_id IN VARCHAR2,
+		current_salary_amount IN NUMBER,
+		current_payment_method IN VARCHAR2,
+		current_salary_status IN VARCHAR2	
+	) 
+IS
+BEGIN
+	UPDATE employee
+	SET salary_amount=current_salary_amount, 	payment_method=	current_payment_method,
+	salary_status=current_salary_status
+	WHERE emp_id = current_emp_id;
+	COMMIT;
+END; 
+/
+
+EXECUTE update_employee_salary('EMA00001','4000','Cash','Suspend');

@@ -1,0 +1,111 @@
+1.Calculate the years of service for an employee 
+
+create or replace function year_service
+(current_emp_id in varchar2)
+return number
+is
+num number(2);
+begin
+select trunc((sysdate - hire_date)/365.25) into num from employee where 
+emp_id = current_emp_id ;
+return num;
+end;
+/
+
+declare
+calculated_year number;
+begin
+calculated_year := year_service('EMA00001');
+dbms_output.put_line ('Year of service is ' || calculated_year );
+end;
+/
+
+2. Calculate the total number of employees in company
+
+create or replace function total_emp
+return number is
+total_emp number(3) := 0;
+begin
+select count(*) into total_emp 
+from employee ;
+return total_emp;
+end;
+/
+
+declare 
+d number(3);
+begin
+d:= total_emp();
+dbms_output.put_line ('Total number of employee in this company is :' || d);
+end;
+/
+
+3.Calculate the total number of supervisor in certain department 
+
+create or replace function total_sv
+( current_dept_no in varchar2)
+return number is
+total number(2) := 0;
+begin
+select count(*) into total 
+from supervisor
+where dept_no = current_dept_no;
+return total;
+end;
+/
+
+declare 
+a number(2);
+begin
+a := total_sv('DEA00001');
+dbms_output.put_line ('Total number of supervisor in this department is:' || a);
+end;
+/
+
+4. Calculate the average salary of employee for certain department in this company 
+create or replace function dept_avg_salary
+(current_dept_no in varchar2)
+return number is
+total number(9) := 0;
+begin
+select ROUND(avg(salary_amount),2) into total 
+from employee
+where dept_no = current_dept_no;
+return total;
+end;
+/
+
+
+
+declare 
+d number(9);
+begin
+d := dept_avg_salary('DEB50892');
+dbms_output.put_line ('average salary of employee in this department is :' || d);
+end;
+/
+
+5.Calculate the employees managed by  certain supervisor 
+
+create or replace function num_emp_managed
+(current_sv_id in varchar2)
+return number is
+total number(3) := 0;
+begin
+select count(*) into total 
+from employee
+where sv_id = current_sv_id;
+return total;
+end;
+/
+
+
+
+declare 
+d number(3);
+begin
+d := num_emp_managed('SVU55647');
+dbms_output.put_line ('Total number of employee managed by this supervisor is :' || d);
+end;
+/
+

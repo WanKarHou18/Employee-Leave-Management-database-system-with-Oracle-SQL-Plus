@@ -1,0 +1,42 @@
+1. Calculate the total number for female  and male with their own relation status in company :
+
+Select gender,relation_status, COUNT(*) from employee group by gender,relation_status; 
+
+2.Show the active workers in each department : 
+
+create or replace view emp_active as select d.dept_no, d.dept_name, COUNT(e.emp_id) as active_workers_num from employee e , department d where e.dept_no = d.dept_no  AND e.lv_status='ACTIVE' group by d.dept_no , d.dept_name;
+
+3. Show the phone number for the employee which are on leave:
+
+CREATE OR REPLACE view phone_view as select e.emp_id , e.emp_name , e.phone_number , d.dept_name , e.lv_status from employee e ,department d WHERE d.dept_no = e.dept_no and e.lv_status='LEAVE' ;
+
+4. Show the leave  approve by supervisor in certain year : 
+
+select  l.recd_no , e.emp_id, e.emp_name ,l.leave_date , l.back_date  ,l.approve_status from leave l ,employee e  where  l.emp_id = e.emp_id and l.approve_status='APPROVE' and EXTRACT(YEAR FROM l.leave_date)= &year_from ; 
+
+5. Create index for department retrieved 
+
+CREATE index department_index on department(dept_no , dept_name); 
+set autotrace on ; 
+set autotrace tracoonly explain 
+select * from department ;
+
+6. Show the average salary of employee for each department
+
+create or replace view salary_view as select d.dept_no , d.dept_name , AVG(e.salary_amount) as average_salary from employee e ,department d where d.dept_no=e.dept_no group by d.dept_no , d.dept_name;
+
+7.show the employee with more than 10  forward  annual leave 
+
+select f.lv_next , f.emp_id , e.emp_name , annual_num_next from employee e , forward_leave f where annual_num_next>10 and f.emp_id=e.emp_id;
+
+8. Calculate the years of service for each employee 
+
+CREATE OR REPLACE VIEW service_vies AS select emp_id ,emp_name , floor(months_between(current_timestamp, hire_date) /12) as year_of_service from employee;
+
+9. SHOW the salary of employee in certain department : 
+
+select e.emp_id ,e.emp_id , e.salary_amount , d.dept_no ,d.dept_name from employee e, department d where d.dept_no=e.dept_no AND d.dept_name = '&departement_name';
+
+10.show the total number of request for leave in each department in the database
+
+select d.dept_no , de.dept_name , COUNT(d.recd_no) as num_request from department_record d ,department de where de.dept_no=d.dept_no group by d.dept_no ,de.dept_name;
